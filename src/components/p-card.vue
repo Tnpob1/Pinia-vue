@@ -92,8 +92,6 @@ import { useCartStore } from '../stores/Cart.js'
 const cart_store = useCartStore();
 
 
-
-
 </script>
 
 <template>

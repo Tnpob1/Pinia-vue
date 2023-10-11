@@ -1,10 +1,14 @@
 import { defineStore } from 'pinia';
 
-import {ref} from 'vue'
+import {computed, ref} from 'vue'
 
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 
 import 'sweetalert2/src/sweetalert2.scss'
+
+import { useProductStore } from './productList';
+
+
 
 export const useCartStore = defineStore('useCartStore',()=>{
     const cart = ref([])
@@ -13,7 +17,7 @@ export const useCartStore = defineStore('useCartStore',()=>{
         const data = {
             id,
             price,
-            amout
+            amout,
         }
 
         const findID = cart.value.find(e => e.id === data.id)
@@ -22,23 +26,39 @@ export const useCartStore = defineStore('useCartStore',()=>{
             alert_add_cart_fail()
         }else{
             cart.value.push(data)
-            
             alert_add_cart()
             IntoLocal()
             
         }
-
         console.log(cart.value)
+
+
     }
-    const IntoLocal = () =>{
-        CartLocal.setItem('cart', JSON.stringify(cart.value))
+    const IntoLocal = () => {
+        localStorage.setItem('cart', JSON.stringify(cart.value))
     }
 
     const CartLocal = () => {
-        if(CartLocal.getItem('cart')){
-            cart.value = JSON.parse (CartLocal.getItem('cart'))
+        if(localStorage.getItem('cart')){
+            cart.value = JSON.parse(CartLocal.getItem('cart'))
         }
     }
+
+    const cart_previews = computed(() => {
+        const product_store = useProductStore()
+
+       return cart.value.map((prd, i) => {
+            const findIndexProduct = product_store.products.findIndex(e => e.id == prd.id)
+
+          return  {
+                product : product_store.products[findIndexProduct],
+                quantity : cart.value[i].quantity,
+                total_product : product_store.products[findIndexProduct].price * cart.value[i].quantity
+            }
+        })
+    })
+
+    
 
     const alert_add_cart = () =>{
         Swal.fire({
@@ -59,5 +79,5 @@ export const useCartStore = defineStore('useCartStore',()=>{
           })
     }
 
-    return {add_cart, IntoLocal}
+    return {cart, add_cart, IntoLocal}
 })
