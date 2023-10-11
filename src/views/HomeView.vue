@@ -1,6 +1,6 @@
 <script setup>
 import { RouterView } from 'vue-router'
-import Cards from '../components/Cafe-card.vue'
+import Cards from '../components/p-card.vue'
 
 
 </script>

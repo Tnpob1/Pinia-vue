@@ -85,18 +85,13 @@ const PCard = [
     amout: ''
   }
 ]
-import { ref } from 'vue';
 
-let cart = ref([]);
+import { useCartStore } from '../stores/Cart.js'
 
-const addToCart = (item) => {
-  const existingItem = cart.value.find((cartItem) => cartItem.id === item.id);
-  if (existingItem) {
-    existingItem.amount++;
-  } else {
-    cart.value.push({ ...item, amount: 1 });
-  }
-};
+
+const cart_store = useCartStore();
+
+
 
 
 </script>
@@ -116,7 +111,7 @@ const addToCart = (item) => {
         </div>
         <div>
           <button
-            @click="addToCart(item)"
+            @click="cart_store.add_cart(item.id,item.price)"
             class="text-white text-md font-semibold bg-green-400 py-2 px-3 rounded-lg shadow-md hover:shadow-lg transition duration-500 transform-gpu hover:scale-110"
           >
             Add to Cart
